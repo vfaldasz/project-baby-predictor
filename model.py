@@ -18,18 +18,21 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(25), nullable=True)
     email = db.Column(db.String(64), nullable=True)
     password = db.Column(db.String(64), nullable=True)
-    photo_id = db.Column(db.Integer,db.ForeignKey('photos.photo_id'))
+    # photo_id = db.Column(db.Integer,db.ForeignKey('photos.photo_id'))
 
-    #Define relationship to photo
+    #Define relationship to photo (not needed. extra)
     photos = db.relationship('Photo')
+
+    projects = db.relationship('Project')
 
 
     """Provide helpful representation when printed."""
     def __repr__(self):
 
-        return "<User user_id={} email={}>".format(self.user_id, self.email)
+        return "<User user_id={} name={} email={} password={}>".format(self.user_id, self.name, self.email, self.password)
 
 
 class Photo(db.Model):
@@ -37,6 +40,26 @@ class Photo(db.Model):
     __tablename__ = "photos"
 
     photo_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    tag = db.Column(db.String(25), nullable=True)
+    url = db.Column(db.String(64), nullable=True)
+    project_id = db.Column(db.Integer,db.ForeignKey('projects.project_id'))
+    user_id = db.Column(db.Integer,db.ForeignKey('users.user_id'))
+    
+
+    #Define relationship to user
+    user = db.relationship('User')
+    project = db.relationship('Project')
+    
+    """Provide helpful representation when printed."""
+    def __repr__(self):
+
+        return "<Photo photo_id={} tag={} url={} project_id={} user_id={}>".format(self.photo_id, self.tag, self.url, self.project_id, self.user_id)
+
+class Project(db.Model):
+
+    __tablename__ = "projects"
+
+    project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.user_id'))
 
     #Define relationship to user
@@ -46,7 +69,9 @@ class Photo(db.Model):
     """Provide helpful representation when printed."""
     def __repr__(self):
 
-        return "<Photo photo_id={}>".format (self.photo_id)
+        return "<Photo project_id={} user_id={}>".format(self.project_id, self.user_id)
+
+
 
 ##############################################################################
 # Helper functions
@@ -55,10 +80,11 @@ def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///ratings'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///babies'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
+    db.create_all()
 
 
 if __name__ == "__main__":

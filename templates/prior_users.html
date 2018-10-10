@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>What would you like to do?</h2>
+
+<form>
+<input type="button" value="Create a new project" onclick="window.location.href= '/new_project'">
+</form>
+
+
+<form>
+<input type="button" value="Show me my old projects" onclick="window.location.href= '/results'">
+</form>
+
+
+
+{% endblock %}
