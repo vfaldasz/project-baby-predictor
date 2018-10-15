@@ -1,6 +1,5 @@
 from sqlalchemy import func
 from model import User
-from model import Photo
 from model import Project
 
 from model import connect_to_db, db
@@ -8,7 +7,7 @@ from server import app
 import datetime
 
 
-def load_users():
+def load_users_and_projects():
 
     """Create example data for the test database."""
 
@@ -20,25 +19,18 @@ def load_users():
 
     db.session.add_all([user1, user2, user3])
     
-    project1 = Project(user= user1)
-    project2 = Project(user= user2)
-    project3 = Project(user= user3)
+    project1 = Project(mom_url = "111", dad_url= "222", baby_url= "333", user= user1)
+    project2 = Project(mom_url = "444", dad_url= "555", baby_url= "777", user= user2)
+    project3 = Project(mom_url = "888", dad_url= "999", baby_url= "000", user= user3)
 
     db.session.add_all([project1, project2, project3])
-    
-
-    photo1 = Photo(tag= "dad", url= "xyz", project= project1, user= user1)
-    photo2 = Photo(tag= "mom", url= "abc", project= project2, user= user2)
-    photo3 = Photo(tag= "mom", url= "bcd", project= project3, user= user3)
-
-    db.session.add_all([photo1, photo2, photo3])
     
 
     db.session.commit()
 
 
 def seed_data():
-    load_users()
+    load_users_and_projects()
 
 if __name__ == "__main__":
     from flask import Flask 

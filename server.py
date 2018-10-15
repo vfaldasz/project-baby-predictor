@@ -2,20 +2,17 @@ from jinja2 import StrictUndefined
 
 import os
 
-from flask import (Flask, render_template, redirect, request, flash, session, url_for,send_from_directory)
+from flask import (Flask, render_template, redirect, request, flash, session, url_for, send_from_directory)
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug.utils import secure_filename
 
-from model import User, Photo, db, connect_to_db
+from model import User, Project, db, connect_to_db
 
-UPLOAD_FOLDER = 'upload'
+UPLOAD_FOLDER = 'static/upload'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-
 
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
@@ -106,8 +103,13 @@ def new_project():
     #photo_from db= Photo.query.all() #query photos from db and put into HTML
     return render_template("new_project.html")
 
-@app.route("/results")
+@app.route("/old_projects")
 def old_projects():
+
+    return render_template("old_projects.html")
+
+@app.route("/results")
+def results():
     """show user's old projects"""
 
     return render_template("results.html")
@@ -121,21 +123,77 @@ def allowed_file(filename):
 def upload_file():
     
     #check if the post request has the file part
-    if 'file' not in request.files: #request from browser. 
-        flash('No file part')
-        return redirect('new_project')
-    file = request.files['file'] # request.file similar to request.get/.args, in this case it is requesting a file from our html. If file exists, flask returns the queried file back to us as our object. The object can then be used for later use (i.e file.filename)
-    # if user does not select file, browser also
-    # submit an empty part without filename
-    if file.filename == '':
+    # if 'file' not in request.files: #request from browser. 
+    #     flash('No file part')
+    #     return redirect('/new_project')
+    print(request.files)
+
+    # get mom_file and dad_file out of request.files 
+    # create a new project in your database.
+    # when you save the mom and dad files to your server (somewhere in your static folder),
+    # add the project id to the end of each file name.
+    # update the new project's database record to fill in the mom_url and dad_url attributes.
+
+
+#create project, commit project, then get project id, then prepend project id to filenames, then upload files, then update project, then set  to filenames, then commit
+
+
+    #file = request.files['file'] # request.file similar to request.get/.args, in this case it is requesting a file from our html. If file exists, flask returns the queried file back to us as our object. The object can then be used for later use (i.e file.filename)
+    #project_add = Project(mom_url= url_for('uploaded_file', filename=filename), dad_url= url_for('uploaded_file', filename=filename), user= user)
+
+
+
+    user= User.query.get(session['user_id'])    
+    new_project = Project(user=user)
+    
+
+    db.session.add(new_project)
+    db.session.commit()
+
+    project_id = str(new_project.project_id)
+
+    mom_file = request.files['mom_file']
+    if mom_file.filename == '':
         flash('No selected file')
         return redirect('/new_project')
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)#make sure file is secure
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))#/uploads/name.jpeg
-        return redirect('/new_project')#place holder for now. want morphed picture to show up on results page   
-        #                         filename=filename))
+    if mom_file and allowed_file(mom_file.filename):
+        filename = secure_filename(mom_file.filename)#make sure file is secure
+        mom_file.save(os.path.join(app.config['UPLOAD_FOLDER'], project_id + filename))#/uploads/name.jpeg
 
+
+        
+    dad_file = request.files['dad_file']
+    if dad_file.filename == '':
+        flash('No selected file')
+        return redirect('/new_project')
+    if dad_file and allowed_file(dad_file.filename):
+        filename = secure_filename(dad_file.filename)#make sure file is secure
+        dad_file.save(os.path.join(app.config['UPLOAD_FOLDER'], project_id + filename))#/uploads/name.jpeg
+    
+
+
+    new_project.mom_url = project_id + mom_file.filename
+    new_project.dad_url = project_id + dad_file.filename
+
+    db.session.commit()
+
+    return redirect("/results")        
+
+
+
+# ____________________________________
+#     file = request.files['file'] # request.file similar to request.get/.args, in this case it is requesting a file from our html. If file exists, flask returns the queried file back to us as our object. The object can then be used for later use (i.e file.filename)
+#     # if user does not select file, browser also
+#     # submit an empty part without filename
+#     if file.filename == '':
+#         flash('No selected file')
+#         return redirect('/new_project')
+#     if file and allowed_file(file.filename):
+#         filename = secure_filename(file.filename)#make sure file is secure
+#         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))#/uploads/name.jpeg
+      
+#     return redirect('/new_project')#place holder for now. want morphed picture to show up on results page   
+      
 
 @app.route('/upload/<filename>')
 def uploaded_file(filename):

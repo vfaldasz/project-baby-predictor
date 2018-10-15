@@ -21,55 +21,51 @@ class User(db.Model):
     name = db.Column(db.String(25), nullable=True)
     email = db.Column(db.String(64), nullable=True)
     password = db.Column(db.String(64), nullable=True)
-    # photo_id = db.Column(db.Integer,db.ForeignKey('photos.photo_id'))
 
-    #Define relationship to photo (not needed. extra)
-    photos = db.relationship('Photo')
-
+    #Define relationship to project
     projects = db.relationship('Project')
 
 
     """Provide helpful representation when printed."""
     def __repr__(self):
 
-        return "<User user_id={} name={} email={} password={}>".format(self.user_id, self.name, self.email, self.password)
+        return "<User user_id={} name={} email={} password={}>".format(self.user_id, self.name, self.email, self.password, self.project_id)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
-
-class Photo(db.Model):
-
-    __tablename__ = "photos"
-
-    photo_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    tag = db.Column(db.String(25), nullable=True)
-    url = db.Column(db.String(64), nullable=True)
-    project_id = db.Column(db.Integer,db.ForeignKey('projects.project_id'))
-    user_id = db.Column(db.Integer,db.ForeignKey('users.user_id'))
-    
-
-    #Define relationship to user
-    user = db.relationship('User')
-    project = db.relationship('Project')
-    
-    """Provide helpful representation when printed."""
-    def __repr__(self):
-
-        return "<Photo photo_id={} tag={} url={} project_id={} user_id={}>".format(self.photo_id, self.tag, self.url, self.project_id, self.user_id)
 
 class Project(db.Model):
+    """Users output of child by using two photos of user"""
 
     __tablename__ = "projects"
 
     project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    mom_url = db.Column(db.String(300), nullable=True)
+    dad_url = db.Column(db.String(300), nullable=True)
+    baby_url = db.Column(db.String(300), nullable=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.user_id'))
-
+    
     #Define relationship to user
     user = db.relationship('User')
-    
-    
+   
     """Provide helpful representation when printed."""
     def __repr__(self):
 
-        return "<Photo project_id={} user_id={}>".format(self.project_id, self.user_id)
+        return "<Project project_id={} mom_url={} dad_url={} baby_url={} user_id={}>".format(self.project_id, self.mom_url, self.dad_url, self.baby_url, self.user_id)
+
+# class Project(db.Model):
+
+#     __tablename__ = "projects"
+
+#     project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     user_id = db.Column(db.Integer,db.ForeignKey('users.user_id'))
+
+#     #Define relationship to user
+#     user = db.relationship('User')
+    
+    
+#     """Provide helpful representation when printed."""
+#     def __repr__(self):
+
+#         return "<Photo project_id={} user_id={}>".format(self.project_id, self.user_id)
 
 
 
