@@ -8,6 +8,9 @@ from werkzeug.utils import secure_filename
 
 from model import User, Project, db, connect_to_db
 
+import facemorpher
+
+
 UPLOAD_FOLDER = 'static/upload'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
@@ -63,7 +66,7 @@ def register_process():
         db.session.commit()
         return redirect("/new_project")
 
-@app.route("/login_form")
+@app.route("/login_form", methods= ["GET"])
 def login_form():
 
     return render_template("login_form.html")
@@ -106,14 +109,19 @@ def new_project():
 @app.route("/old_projects")
 def old_projects():
 
+
     return render_template("old_projects.html")
 
-@app.route("/results")
-def results():
-    """show user's old projects"""
+@app.route("/results/<int:project_id>")
+def results(project_id):
+    """show user's results"""
 
-    return render_template("results.html")
+    #pictures= User.query.options(db.joinedload('projects')).get(session['user_id'])
+    pictures = Project.query.filter_by(project_id= project_id).first()
 
+
+    return render_template("results.html", pictures = pictures)
+ 
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -152,32 +160,47 @@ def upload_file():
 
     project_id = str(new_project.project_id)
 
+    project_base_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'project_' + project_id)
+    os.mkdir(project_base_dir)
+
     mom_file = request.files['mom_file']
     if mom_file.filename == '':
         flash('No selected file')
         return redirect('/new_project')
     if mom_file and allowed_file(mom_file.filename):
         filename = secure_filename(mom_file.filename)#make sure file is secure
-        mom_file.save(os.path.join(app.config['UPLOAD_FOLDER'], project_id + filename))#/uploads/name.jpeg
+        mom_file.save(os.path.join(project_base_dir, filename))#/uploads/name.jpeg
 
-
-        
     dad_file = request.files['dad_file']
     if dad_file.filename == '':
         flash('No selected file')
         return redirect('/new_project')
     if dad_file and allowed_file(dad_file.filename):
         filename = secure_filename(dad_file.filename)#make sure file is secure
-        dad_file.save(os.path.join(app.config['UPLOAD_FOLDER'], project_id + filename))#/uploads/name.jpeg
+        dad_file.save(os.path.join(project_base_dir, filename))#/uploads/name.jpeg
     
 
+    new_project.mom_url = 'project_'+ project_id + '/' + mom_file.filename
+    new_project.dad_url = 'project_'+ project_id + '/' + dad_file.filename
 
-    new_project.mom_url = project_id + mom_file.filename
-    new_project.dad_url = project_id + dad_file.filename
+    
+    mom = os.path.join(project_base_dir, mom_file.filename)
+    dad = os.path.join(project_base_dir, dad_file.filename)
+
+
+    facemorpher.averager(imgpaths = [mom, dad], out_filename = os.path.join(project_base_dir, 'result.png'), blur_edges = True, alpha = True)
+    
+    new_project.baby_url = os.path.join('project_'+ project_id + '/', 'result.png')
 
     db.session.commit()
+    # facemorpher.morpher([mom, dad], out_video=os.path.join(project_base_dir, '/result.avi'))
+    # ff = FFmpeg( inputs={os.path.join(project_base_dir, '/result.avi'): None},
+    #     outputs={os.path.join(project_base_dir, '/result.mpg'): None})`
+    # ff.run()
+   
 
-    return redirect("/results")        
+
+    return redirect("/results/" + project_id)
 
 
 
