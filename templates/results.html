@@ -9,7 +9,11 @@
 <p><img class="project-photo" src = '/static/upload/{{ pictures.baby_url }}'></p>
 
 
-<button type="button">Download my results please!</button>
+<button type="button">
+    <a href= '/static/upload/{{ pictures.baby_url }}' download= "yourbaby.png">
+    Download my results please!    
+    </a>
+</button>
 <button type="button">Show me photo processing centers near me</button>
 
 

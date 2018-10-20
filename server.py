@@ -32,11 +32,11 @@ def index():
     return render_template("homepage.html")
 
 
-@app.route("/prior_users")
-def user_choice():
-    """Show user choice to create new project or see pre-existing project"""
+# @app.route("/prior_users")
+# def user_choice():
+#     """Show user choice to create new project or see pre-existing project"""
 
-    return render_template("prior_users.html")
+#     return render_template("prior_users.html")
 
 @app.route("/register_form", methods= ["GET"])
 def register_form():
@@ -81,11 +81,11 @@ def logged_in():
 
     if not user:
         flash("No such user")
-        return redirect("/login_form")
+        return redirect("/register_form")
 
     if user.password == password: 
         session['user_id']= user.user_id
-        return redirect('/prior_users')
+        return redirect('/new_project')
     else:
         flash("Incorrect password")
         return redirect("/login_form")
@@ -106,11 +106,11 @@ def new_project():
     #photo_from db= Photo.query.all() #query photos from db and put into HTML
     return render_template("new_project.html")
 
-@app.route("/old_projects")
-def old_projects():
+# @app.route("/old_projects")
+# def old_projects():
 
 
-    return render_template("old_projects.html")
+#     return render_template("old_projects.html")
 
 @app.route("/results/<int:project_id>")
 def results(project_id):
@@ -202,6 +202,13 @@ def upload_file():
 
     return redirect("/results/" + project_id)
 
+@app.route('/googlemaps')
+def googlemaps():
+    GOOGLE_API_KEY= os.environ["GOOGLE_API_KEY"]
+
+
+
+    return render_template('googlemaps.html', GOOGLE_API_KEY= GOOGLE_API_KEY)
 
 
 # ____________________________________
