@@ -1,14 +1,11 @@
 from jinja2 import StrictUndefined
-
 import os
-
 from flask import (Flask, render_template, redirect, request, flash, session, url_for, send_from_directory)
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug.utils import secure_filename
-
 from model import User, Project, db, connect_to_db
-
 import facemorpher
+import hashlib
 
 
 UPLOAD_FOLDER = 'static/upload'
@@ -50,6 +47,10 @@ def register_process():
     
     email = request.form.get("email")
     password = request.form.get("password")
+    password = password.encode()#converts password into byte code
+    hash_password = hashlib.sha256(password)# creates a SHA-256 hash object 
+    hash_password = hash_password.hexdigest()#digest is returned as a string object of double length, containing only hexadecimal digits
+
 
 # first, check if email is already in the database.
 # don't allow a user to create a second record with the same email.
@@ -61,7 +62,7 @@ def register_process():
         flash("User already exists. Please log-in.")
         return redirect('/login_form')
     else: 
-        user_add = User(email= email, password= password)#adding user into dB
+        user_add = User(email= email, password= hash_password)#adding user into dB
         db.session.add(user_add)
         db.session.commit()
         return redirect("/new_project")
@@ -76,6 +77,10 @@ def logged_in():
 
     email = request.form.get("email") #get email and password from log in form
     password = request.form.get("password")
+    password = password.encode()#converts password into byte code
+    hash_password = hashlib.sha256(password)# creates a SHA-256 hash object 
+    hash_password = hash_password.hexdigest()#digest is returned as a string object of double length, containing only hexadecimal digits
+
 
     user = User.query.filter_by(email = email).first() #query dB to see if email is already there in dB. If so, flask returns the queried data back to us as our object. The object can then be used for later use (i.e user.password)
 
@@ -83,7 +88,7 @@ def logged_in():
         flash("No such user")
         return redirect("/register_form")
 
-    if user.password == password: 
+    if user.password == hash_password: 
         session['user_id']= user.user_id
         return redirect('/new_project')
     else:
