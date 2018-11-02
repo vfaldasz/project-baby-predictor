@@ -29,7 +29,7 @@ class User(db.Model):
     """Provide helpful representation when printed."""
     def __repr__(self):
 
-        return "<User user_id={} name={} email={} password={}>".format(self.user_id, self.name, self.email, self.password, self.project_id)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+        return "<User user_id={} name={} email={} password={}>".format(self.user_id, self.name, self.email, self.password)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
 
 class Project(db.Model):
@@ -41,7 +41,9 @@ class Project(db.Model):
     mom_url = db.Column(db.String(300), nullable=True)
     dad_url = db.Column(db.String(300), nullable=True)
     baby_url = db.Column(db.String(300), nullable=True)
+    baby_mp4= db.Column(db.String(300), nullable= True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.user_id'))
+
     
     #Define relationship to user
     user = db.relationship('User')
@@ -49,7 +51,7 @@ class Project(db.Model):
     """Provide helpful representation when printed."""
     def __repr__(self):
 
-        return "<Project project_id={} mom_url={} dad_url={} baby_url={} user_id={}>".format(self.project_id, self.mom_url, self.dad_url, self.baby_url, self.user_id)
+        return "<Project project_id={} mom_url={} dad_url={} baby_url={} baby_mp4{} user_id={}>".format(self.project_id, self.mom_url, self.dad_url, self.baby_url, self.baby_mp4, self.user_id)
 
 # class Project(db.Model):
 
@@ -72,7 +74,7 @@ class Project(db.Model):
 ##############################################################################
 # Helper functions
 
-def connect_to_db(app, db_uri='postgresql:///testdb'):
+def connect_to_db(app, db_uri='postgresql:///babies'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database

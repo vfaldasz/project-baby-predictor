@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from model import User, Project, db, connect_to_db
 import facemorpher
 import hashlib
+from ffmpy import FFmpeg
 
 
 UPLOAD_FOLDER = 'static/upload'
@@ -65,7 +66,7 @@ def register_process():
         user_add = User(email= email, password= hash_password)#adding user into dB
         db.session.add(user_add)
         db.session.commit()
-        return redirect("/new_project")
+        return redirect("/login_form")
 
 @app.route("/login_form", methods= ["GET"])
 def login_form():
@@ -87,6 +88,11 @@ def logged_in():
     if not user:
         flash("No such user")
         return redirect("/register_form")
+
+    print (user.password)
+    print (hash_password)
+    print (user)
+
 
     if user.password == hash_password: 
         session['user_id']= user.user_id
@@ -139,16 +145,14 @@ def upload_file():
     # if 'file' not in request.files: #request from browser. 
     #     flash('No file part')
     #     return redirect('/new_project')
-    print(request.files)
+    # print(request.files)
 
     # get mom_file and dad_file out of request.files 
-    # create a new project in your database.
-    # when you save the mom and dad files to your server (somewhere in your static folder),
+    # create a new project in the database 
+    # when saving the mom and dad files to your server (somewhere in static folder),
     # add the project id to the end of each file name.
     # update the new project's database record to fill in the mom_url and dad_url attributes.
 
-
-#create project, commit project, then get project id, then prepend project id to filenames, then upload files, then update project, then set  to filenames, then commit
 
 
     #file = request.files['file'] # request.file similar to request.get/.args, in this case it is requesting a file from our html. If file exists, flask returns the queried file back to us as our object. The object can then be used for later use (i.e file.filename)
@@ -198,19 +202,41 @@ def upload_file():
     new_project.baby_url = os.path.join('project_'+ project_id + '/', 'result.png')
 
     db.session.commit()
-    # facemorpher.morpher([mom, dad], out_video=os.path.join(project_base_dir, '/result.avi'))
-    # ff = FFmpeg( inputs={os.path.join(project_base_dir, '/result.avi'): None},
-    #     outputs={os.path.join(project_base_dir, '/result.mpg'): None})`
-    # ff.run()
+
+    avi_filename = os.path.join(project_base_dir, 'result.avi')
+
+    facemorpher.morpher([mom, dad], out_video=avi_filename)
+
+
+    #converts avi to mp4
+    ff = FFmpeg( inputs={avi_filename: None},
+                 outputs={os.path.join(project_base_dir, 'result.mp4'): '-filter:v "setpts=3.0*PTS"'}
+                )
+
+    ff.run()
+
+
+    # ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
+
+    # ff = FFmpeg( inputs={'input.mkv': None},
+    #              outputs={'outpt.mkv': '-filter:v "setpts=2.0*PTS"'}
+    #             )
+
+    #ff.run()
+
+    new_project.baby_avi = avi_filename
+
+    new_project.baby_mp4 = os.path.join('project_'+ project_id + '/', 'result.mp4')
+
+
+    db.session.commit()
    
-
-
     return redirect("/results/" + project_id)
 
 @app.route('/googlemaps')
 def googlemaps():
+    """Displays nearby photo processing centers"""
     GOOGLE_API_KEY= os.environ["GOOGLE_API_KEY"]
-
 
 
     return render_template('googlemaps.html', GOOGLE_API_KEY= GOOGLE_API_KEY)
@@ -232,6 +258,9 @@ def googlemaps():
 
 @app.route('/upload/<filename>')
 def uploaded_file(filename):
+    """returns uploaded photo to Upload Folder"""
+
+
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
