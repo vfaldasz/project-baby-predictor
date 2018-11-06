@@ -1,16 +1,73 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="container">
 
-<h2>Here's how your baby will look like...</h2>
+<h2>Here's How Your Baby Will Look</h2>
+
+   
+    <div class="row">
+
+        
+
+        <div class="col-6">
+
+            <div>
+            <p>Mom:</p>
+            </div>
 
 
-<p><img class="project-photo" src = '/static/upload/{{ pictures.mom_url }}'></p>
-<p><img class="project-photo" src = '/static/upload/{{ pictures.dad_url }}'></p>
-<p><img class="project-photo" src = '/static/upload/{{ pictures.baby_url }}'></p>
+            <div>
+            <p><img class="project-photo"  class="center" src = '/static/upload/{{ pictures.mom_url }}' style="width:128px;height:128px;" ></p>
+            </div>
 
-<p><video width="500" height="400" controls muted autoplay loop playbackRate = 0.5>
-  <source src="/static/upload/{{ pictures.baby_mp4 }}" type="video/mp4">
-</video> </p>
+            <br>
+            <br>
+            <br>
+
+            <div>
+            <p>The Results:</p>
+            </div>
+            
+            <div>
+            <p><video width="300" height="300" class="center" controls muted autoplay loop playbackRate = 0.5> <source src="/static/upload/{{ pictures.baby_mp4 }}" type="video/mp4"> </video> </p>
+            </div>
+
+         </div>
+
+
+
+
+        <div class="col-6">
+
+            <div>
+            <p>Dad:</p>
+            </div>
+
+
+            <div>
+            <p><img class="project-photo" class="center" src = '/static/upload/{{ pictures.dad_url }}' style="width:128px;height:128px;" ></p>
+            </div>
+
+            <br>
+            <br>
+            <br>
+
+            <div>
+            <p>The Results:</p>
+            </div>
+            
+            <div>
+            <p><img class="project-photo" class="center" src = '/static/upload/{{ pictures.baby_url }}' </p>
+            </div>
+
+        <!-- COLUMN TWO -->
+
+        </div>
+
+
+    </div>
+
+
 
 
 <button type="button">
@@ -20,5 +77,5 @@
 </button>
 <button type="button"> <a href="/googlemaps">Find photo processing centers nearby </a> </button>
 
-
+</div>
 {% endblock %}
