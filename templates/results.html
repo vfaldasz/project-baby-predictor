@@ -2,17 +2,44 @@
 {% block content %}
 <div class="container">
 
-<h2>Here's How Your Baby Will Look</h2>
+<h2 class="center" >Here's How Your Baby Will Look</h2>
 
    
-    <div class="row">
+    <div class="row mom-dad">
 
-        
+        <div class="col-12 col-md-5">
+            <h2>Mom</h2>
+            <img class="project-photo" class="center" src = '/static/upload/{{ pictures.mom_url }}' style="width:128px;height:128px;" >
+        </div>
+        <div class="col-12 col-md-2">
+            <i class="fas fa-plus"></i> <!-- plus icon from fontawesome -->
+        </div>
+        <div class="col-12 col-md-5">
+            <h2>Dad</h2>
+            <img class="project-photo" class="center" src = '/static/upload/{{ pictures.dad_url }}' style="width:128px;height:128px;" >
+        </div>
+    </div>
 
-        <div class="col-6">
+    <div class="row results"><p>The results</p></div>
+
+    <div class="row results">
+        <div class="col-12 col-md-6">
+            <video width="300" height="300" class="center" 
+            controls muted autoplay loop playbackRate=0.5> 
+            <source src="/static/upload/{{ pictures.baby_mp4 }}" type="video/mp4"> 
+            </video>
+        </div>
+        <div class="col-12 col-md-6">
+            <img class="project-photo" class="center" src = '/static/upload/{{ pictures.baby_url }}'>
+        </div>
+    </div>
+
+<!--         
+
+        <div class="col-12 col-md-6">
 
             <div>
-            <p>Mom:</p>
+            <p>Mom</p>
             </div>
 
 
@@ -25,7 +52,7 @@
             <br>
 
             <div>
-            <p>The Results:</p>
+            <p>Video Result</p>
             </div>
             
             <div>
@@ -37,10 +64,10 @@
 
 
 
-        <div class="col-6">
+        <div class="col-12 col-md-6">
 
             <div>
-            <p>Dad:</p>
+            <p>Dad</p>
             </div>
 
 
@@ -53,29 +80,25 @@
             <br>
 
             <div>
-            <p>The Results:</p>
+            <p>Your Baby's Image</p>
             </div>
             
             <div>
             <p><img class="project-photo" class="center" src = '/static/upload/{{ pictures.baby_url }}' </p>
             </div>
 
-        <!-- COLUMN TWO -->
-
-        </div>
+        </div> -->
 
 
-    </div>
+    <!-- </div> -->
 
 
-
-
-<button type="button">
+<button class="center" type="button" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;">
     <a href= '/static/upload/{{ pictures.baby_url }}' download= "yourbaby.png">
-    Download my results please!    
+    Download baby's image  
     </a>
 </button>
-<button type="button"> <a href="/googlemaps">Find photo processing centers nearby </a> </button>
+<button class="center" type="button" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;"> <a href="/googlemaps">Find photo processing centers nearby </a> </button>
 
 </div>
 {% endblock %}

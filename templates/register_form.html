@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
+<br>
+<br>
+<br>
+<br>
+
 
 <form action="/register_form" method= "POST">
-    Email: <input type= "text" name="email">
-    Password: <input type= "password" name= "password">
-    <input type= "submit" value= "Register Me!">
+            <input name="email" type="text" placeholder="Your Email">
+            <input name="password" type="password" placeholder="Your Password">
+            <div>
+            <input type= "submit" class="btn" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;" value="Sign Up">
+            </div>
 </form>
 
 {% endblock %}

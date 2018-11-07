@@ -1,14 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-<h2>Your baby prediction is on the way...</h2>
 
+<h2 class="center">Your baby prediction is on the way</h2>
+<br>
+<br>
 
 <form method="POST" enctype="multipart/form-data" action="/form-data">
       
-    <label>Upload Mom's Photo: <input type=file name=mom_file></label>
-    <label>Upload Dad's Photo: <input type=file name=dad_file></label>
-    <input type=submit value=Upload>
+    <label class="center">Upload Mom's Photo <input type=file class="btn" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;" name=mom_file></label><br>
+    <label class="center">Upload Dad's Photo <input type=file class="btn" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;" name=dad_file></label><br>
+    <input type=submit class="btn" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;" value=Upload>
 </form> <br>
 
 
