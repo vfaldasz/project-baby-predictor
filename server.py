@@ -259,7 +259,7 @@ def googlemaps():
 @app.route('/upload/<filename>')
 def uploaded_file(filename):
     """returns uploaded photo to Upload Folder"""
-
+    
 
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
@@ -269,7 +269,7 @@ def uploaded_file(filename):
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
-    app.debug = True
+    app.debug = False
     # make sure templates, etc. are not cached in debug mode
     app.jinja_env.auto_reload = app.debug
 
