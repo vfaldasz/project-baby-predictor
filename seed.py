@@ -1,7 +1,6 @@
 from sqlalchemy import func
 from model import User
 from model import Project
-
 from model import connect_to_db, db
 from server import app
 import datetime

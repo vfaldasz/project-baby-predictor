@@ -53,21 +53,6 @@ class Project(db.Model):
 
         return "<Project project_id={} mom_url={} dad_url={} baby_url={} baby_mp4{} user_id={}>".format(self.project_id, self.mom_url, self.dad_url, self.baby_url, self.baby_mp4, self.user_id)
 
-# class Project(db.Model):
-
-#     __tablename__ = "projects"
-
-#     project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     user_id = db.Column(db.Integer,db.ForeignKey('users.user_id'))
-
-#     #Define relationship to user
-#     user = db.relationship('User')
-    
-    
-#     """Provide helpful representation when printed."""
-#     def __repr__(self):
-
-#         return "<Photo project_id={} user_id={}>".format(self.project_id, self.user_id)
 
 
 

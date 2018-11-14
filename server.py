@@ -30,12 +30,6 @@ def index():
     return render_template("homepage.html")
 
 
-# @app.route("/prior_users")
-# def user_choice():
-#     """Show user choice to create new project or see pre-existing project"""
-
-#     return render_template("prior_users.html")
-
 @app.route("/register_form", methods= ["GET"])
 def register_form():
 
@@ -114,20 +108,13 @@ def logged_out():
 def new_project():
     """submit photos and display results"""
 
-    #photo_from db= Photo.query.all() #query photos from db and put into HTML
     return render_template("new_project.html")
 
-# @app.route("/old_projects")
-# def old_projects():
-
-
-#     return render_template("old_projects.html")
 
 @app.route("/results/<int:project_id>")
 def results(project_id):
     """show user's results"""
 
-    #pictures= User.query.options(db.joinedload('projects')).get(session['user_id'])
     pictures = Project.query.filter_by(project_id= project_id).first()
 
 
@@ -140,24 +127,12 @@ def allowed_file(filename):
 
 @app.route('/form-data', methods=['POST'])
 def upload_file():
-    
-    #check if the post request has the file part
-    # if 'file' not in request.files: #request from browser. 
-    #     flash('No file part')
-    #     return redirect('/new_project')
-    # print(request.files)
 
     # get mom_file and dad_file out of request.files 
     # create a new project in the database 
-    # when saving the mom and dad files to your server (somewhere in static folder),
+    # when saving the mom and dad files to server (somewhere in static folder),
     # add the project id to the end of each file name.
     # update the new project's database record to fill in the mom_url and dad_url attributes.
-
-
-
-    #file = request.files['file'] # request.file similar to request.get/.args, in this case it is requesting a file from our html. If file exists, flask returns the queried file back to us as our object. The object can then be used for later use (i.e file.filename)
-    #project_add = Project(mom_url= url_for('uploaded_file', filename=filename), dad_url= url_for('uploaded_file', filename=filename), user= user)
-
 
 
     user= User.query.get(session['user_id'])    
@@ -216,14 +191,6 @@ def upload_file():
     ff.run()
 
 
-    # ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
-
-    # ff = FFmpeg( inputs={'input.mkv': None},
-    #              outputs={'outpt.mkv': '-filter:v "setpts=2.0*PTS"'}
-    #             )
-
-    #ff.run()
-
     new_project.baby_avi = avi_filename
 
     new_project.baby_mp4 = os.path.join('project_'+ project_id + '/', 'result.mp4')
@@ -238,24 +205,8 @@ def googlemaps():
     """Displays nearby photo processing centers"""
     GOOGLE_API_KEY= os.environ["GOOGLE_API_KEY"]
 
-
     return render_template('googlemaps.html', GOOGLE_API_KEY= GOOGLE_API_KEY)
-
-
-# ____________________________________
-#     file = request.files['file'] # request.file similar to request.get/.args, in this case it is requesting a file from our html. If file exists, flask returns the queried file back to us as our object. The object can then be used for later use (i.e file.filename)
-#     # if user does not select file, browser also
-#     # submit an empty part without filename
-#     if file.filename == '':
-#         flash('No selected file')
-#         return redirect('/new_project')
-#     if file and allowed_file(file.filename):
-#         filename = secure_filename(file.filename)#make sure file is secure
-#         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))#/uploads/name.jpeg
-      
-#     return redirect('/new_project')#place holder for now. want morphed picture to show up on results page   
-      
-
+     
 @app.route('/upload/<filename>')
 def uploaded_file(filename):
     """returns uploaded photo to Upload Folder"""
@@ -263,8 +214,6 @@ def uploaded_file(filename):
 
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
-
-
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

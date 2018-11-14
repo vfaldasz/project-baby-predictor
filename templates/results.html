@@ -34,71 +34,17 @@
         </div>
     </div>
 
-<!--         
-
-        <div class="col-12 col-md-6">
-
-            <div>
-            <p>Mom</p>
-            </div>
-
-
-            <div>
-            <p><img class="project-photo"  class="center" src = '/static/upload/{{ pictures.mom_url }}' style="width:128px;height:128px;" ></p>
-            </div>
-
-            <br>
-            <br>
-            <br>
-
-            <div>
-            <p>Video Result</p>
-            </div>
-            
-            <div>
-            <p><video width="300" height="300" class="center" controls muted autoplay loop playbackRate = 0.5> <source src="/static/upload/{{ pictures.baby_mp4 }}" type="video/mp4"> </video> </p>
-            </div>
-
-         </div>
-
-
-
-
-        <div class="col-12 col-md-6">
-
-            <div>
-            <p>Dad</p>
-            </div>
-
-
-            <div>
-            <p><img class="project-photo" class="center" src = '/static/upload/{{ pictures.dad_url }}' style="width:128px;height:128px;" ></p>
-            </div>
-
-            <br>
-            <br>
-            <br>
-
-            <div>
-            <p>Your Baby's Image</p>
-            </div>
-            
-            <div>
-            <p><img class="project-photo" class="center" src = '/static/upload/{{ pictures.baby_url }}' </p>
-            </div>
-
-        </div> -->
-
-
-    <!-- </div> -->
-
 
 <button class="center" type="button" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;">
     <a href= '/static/upload/{{ pictures.baby_url }}' download= "yourbaby.png">
     Download baby's image  
     </a>
 </button>
-<button class="center" type="button" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;"> <a href="/googlemaps">Find photo processing centers nearby </a> </button>
+
+<button class="center" type="button" style="border-radius: 5px; background-color:rgba(204,204,204,0.7); border-color: gray;"> <a href="/googlemaps">Find photo processing centers nearby </a> 
+</button>
 
 </div>
+
+
 {% endblock %}
